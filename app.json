@@ -1,0 +1,73 @@
+{
+  "configVersion": "v3",
+  "app": {
+    "appId": 26267,
+    "appName": "Persian Calendar",
+    "appType": "app",
+    "version": {
+      "code": 1,
+      "name": "1.0.0"
+    },
+    "icon": "icon.png",
+    "vender": "Ha;D",
+    "description": "Persian Calendar for Zepp OS"
+  },
+  "permissions": [],
+  "runtime": {
+    "apiVersion": {
+      "compatible": "3.0.0",
+      "target": "3.0.0",
+      "minVersion": "3.0"
+    }
+  },
+  "targets": {
+    "default": {
+      "module": {
+        "page": {
+          "pages": [
+            "page/index"
+          ]
+        },
+        "secondary-widget": {
+          "widgets": [
+            {
+              "path": "secondary-widget/index",
+              "icon": "icon.png",
+              "name": "Persian Date",
+              "preview": "preview.png",
+              "runtime": {
+                "type": "js"
+              }
+            }
+          ]
+        },
+        "app-widget": {
+          "widgets": [
+            {
+              "path": "app-widget/index",
+              "icon": "icon.png",
+              "name": "Persian Date",
+              "preview": "preview.png",
+              "runtime": {
+                "type": "js"
+              }
+            }
+          ]
+        }
+      },
+      "platforms":
+        [
+          {
+            "st": "r",
+            "dw": 480
+          }
+        ]
+    }
+  },
+  "i18n": {
+    "en-US": {
+      "appName": "Persian Calendar"
+    }
+  },
+  "defaultLanguage": "en-US"
+}

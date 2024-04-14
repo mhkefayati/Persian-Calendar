@@ -1,0 +1,24 @@
+"secondary-widget": {
+          "widgets": [
+            {
+              "path": "secondary-widget/index",
+              "name": "Persian Calendar",
+              "icon": "icon.png",
+              "runtime": {
+                "type": "js"
+              }
+            }
+          ]
+          },
+          "app-widget": {
+            "widgets": [
+              {
+                "path": "app-widget/index",
+                "icon": "icon.png",
+                "name": "Persian Calendar",
+                "runtime": {
+                  "type": "js"
+                }
+              }
+            ]
+          }
