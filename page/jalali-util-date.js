@@ -1,20 +1,20 @@
 /*
   Expose functions.
 */
-module.exports =
-  { toJalaali: toJalaali
-  , toGregorian: toGregorian
-  , isValidJalaaliDate: isValidJalaaliDate
-  , isLeapJalaaliYear: isLeapJalaaliYear
-  , jalaaliMonthLength: jalaaliMonthLength
-  , jalCal: jalCal
-  , j2d: j2d
-  , d2j: d2j
-  , g2d: g2d
-  , d2g: d2g
-  , jalaaliToDateObject: jalaaliToDateObject
-  , jalaaliWeek: jalaaliWeek
-  }
+// module.exports =
+//   { toJalaali: toJalaali
+//   , toGregorian: toGregorian
+//   , isValidJalaaliDate: isValidJalaaliDate
+//   , isLeapJalaaliYear: isLeapJalaaliYear
+//   , jalaaliMonthLength: jalaaliMonthLength
+//   , jalCal: jalCal
+//   , j2d: j2d
+//   , d2j: d2j
+//   , g2d: g2d
+//   , d2g: d2g
+//   , jalaaliToDateObject: jalaaliToDateObject
+//   , jalaaliWeek: jalaaliWeek
+//   }
 
 /*
   Jalaali years starting the 33-year rule.
@@ -26,7 +26,7 @@ var breaks =  [ -61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210
 /*
   Converts a Gregorian date to Jalaali.
 */
-function toJalaali(gy, gm, gd) {
+export function toJalaali(gy, gm, gd) {
   if (Object.prototype.toString.call(gy) === '[object Date]') {
     gd = gy.getDate()
     gm = gy.getMonth() + 1
@@ -38,7 +38,7 @@ function toJalaali(gy, gm, gd) {
 /*
   Converts a Jalaali date to Gregorian.
 */
-function toGregorian(jy, jm, jd) {
+export function toGregorian(jy, jm, jd) {
   return d2g(j2d(jy, jm, jd))
 }
 
@@ -61,7 +61,7 @@ function isLeapJalaaliYear(jy) {
 /*
   Number of days in a given month in a Jalaali year.
 */
-function jalaaliMonthLength(jy, jm) {
+export function jalaaliMonthLength(jy, jm) {
   if (jm <= 6) return 31
   if (jm <= 11) return 30
   if (isLeapJalaaliYear(jy)) return 30
@@ -186,7 +186,7 @@ function jalCal(jy, withoutLeap) {
   @param jd Jalaali day (1 to 29/31)
   @return Julian Day number
 */
-function j2d(jy, jm, jd) {
+export function j2d(jy, jm, jd) {
   var r = jalCal(jy, true)
   return g2d(r.gy, 3, r.march) + (jm - 1) * 31 - div(jm, 7) * (jm - 7) + jd - 1
 }

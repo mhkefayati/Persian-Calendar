@@ -1,6 +1,6 @@
 // Refer original code
 // https://github.com/OpenSID/OpenSID/blob/master/donjo-app/libraries/Date_conv.php#L44
-const hijriToJulian = (year, month, day) => {
+export const hijriToJulian = (year, month, day) => {
   return (
     Math.floor((11 * year + 3) / 30) +
     Math.floor(354 * year) +
@@ -12,7 +12,7 @@ const hijriToJulian = (year, month, day) => {
   );
 };
 
-const gregorianToJulian = (year, month, day) => {
+export const gregorianToJulian = (year, month, day) => {
   if (month < 3) {
     year -= 1;
     month += 12;
@@ -30,7 +30,7 @@ const gregorianToJulian = (year, month, day) => {
   return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524;
 };
 
-const julianToHijri = (julianDay) => {
+export const julianToHijri = (julianDay) => {
   const y = 10631.0 / 30.0;
   const epochAstro = 1948084;
   const shift1 = 8.01 / 60.0;
@@ -55,7 +55,7 @@ const julianToHijri = (julianDay) => {
   
 };
 
-const julianToGregorian = (julianDate) => {
+export const julianToGregorian = (julianDate) => {
   let b = 0;
   if (julianDate > 2299160) {
     const a = Math.floor((julianDate - 1867216.25) / 36524.25);
@@ -89,4 +89,4 @@ export const ARABIC_MONTH_NAMES = {1: 'محرم',2:'صفر',3:'ربیع الاو
 // 'رَجــَــبْ','شــَــعــْـــبـــان','رَمــَــضــَــان','شــَـــوَّال','ذو الــقــعــدة'
 // ];
 	
-export { hijriToJulian, gregorianToJulian, julianToHijri, julianToGregorian };
+// export { hijriToJulian, gregorianToJulian, julianToHijri, julianToGregorian };

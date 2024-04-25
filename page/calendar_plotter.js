@@ -13,7 +13,7 @@ import { ARABIC_MONTH_NAMES} from './hijri-util-date.js';
 import { jalaaliMonthLength,toGregorian } from './jalali-util-date.js';
 import { jalaaliMonthEvents } from './date_events_handlers.js';
 import { setPageBrightTime, resetPageBrightTime, pauseDropWristScreenOff} from '@zos/display'
-
+import {jalaliToGregorian} from './date_conversion_functions.js'
 export const font_path = `/fonts/Vazir.ttf`; //`/fonts/custom.ttf` 'Vazir';
 ox = 0;
 const DATE_BUT_SIZE = 37;
@@ -25,9 +25,38 @@ export const gap_h = gap_v;
 
 export const hijri_offset = -1;
 
+
+export function getMovedDates(month_jump, date_in_g,day_of_week){
+  date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
+    
+  jump_cnt = month_jump;
+    while (jump_cnt !=0){
+      date_in_p_c = date_in_p;
+      date_in_p[1] += Math.sign(jump_cnt);
+      if (date_in_p[1]> 12){
+        date_in_p[1] = 1;
+        date_in_p[0] += 1;
+      } else if (date_in_p[1] < 1){
+        date_in_p[1] = 12;
+        date_in_p[0] -= 1;
+      }
+      if (jump_cnt > 0){
+        current_month_length = jalaaliMonthLength(date_in_p_c[0],date_in_p_c[1]);
+        day_of_week = positive_mod((current_month_length+day_of_week-1), 7)+1;      
+      } else if (jump_cnt < 0){
+        prev_month_length = jalaaliMonthLength(date_in_p[0],date_in_p[1]);
+        day_of_week = positive_mod((-prev_month_length-1+day_of_week), 7)+1;      
+      }
+      // day_of_week = positive_mod((Math.sign(jump_cnt)*current_month_length+day_of_week), 7)+1;
+      jump_cnt -= Math.sign(jump_cnt);
+    }
+    date_in_g = jalaliToGregorian(date_in_p[0], date_in_p[1], date_in_p[2]);
+  return date_in_g,day_of_week
+  }
+
 // date_in_g = [2024,4,6];
     // day_of_week = 6;
-export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
+export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,holidays_of_month, Events_of_month, 
   // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month){
     if (day_of_week < 6)
       day_of_week_persian = day_of_week+2;

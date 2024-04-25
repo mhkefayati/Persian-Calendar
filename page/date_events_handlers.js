@@ -17,7 +17,7 @@ export function get_hijri_from_persian(y_per,m_per,d_per){
 }
 
 
-function get_hijri_cal_in_persian_month(y_per,m_per,hijri_offset){
+export function get_hijri_cal_in_persian_month(y_per,m_per,hijri_offset){
     hijri_day_in_per_month = new Array(jalaaliMonthLength(y_per, m_per)).fill(1);
     hijri_month_in_per_month = new Array(jalaaliMonthLength(y_per, m_per)).fill(2);
     hijri_year_in_per_month = new Array(jalaaliMonthLength(y_per, m_per)).fill(1400);
