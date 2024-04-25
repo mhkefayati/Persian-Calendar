@@ -1,7 +1,7 @@
 import { getText } from '@zos/i18n'
 import { readFileSync , writeFileSync,mkdirSync} from '@zos/fs'
 import * as Styles from 'zosLoader:./index.[pf].layout.js'
-import { getTextLayout, createWidget, widget, event, prop} from '@zos/ui'
+import { getTextLayout, createWidget,deleteWidget, widget, event, prop} from '@zos/ui'
 import { log as Logger, px } from "@zos/utils";
 import { getDeviceInfo } from '@zos/device'
 import { align, text_style } from '@zos/ui'
@@ -14,6 +14,8 @@ import { jalaaliMonthLength,toGregorian } from './jalali-util-date.js';
 import { jalaaliMonthEvents } from './date_events_handlers.js';
 import { setPageBrightTime, resetPageBrightTime, pauseDropWristScreenOff} from '@zos/display'
 import {jalaliToGregorian} from './date_conversion_functions.js'
+// import {set_group_cal} from './index.js'
+
 export const font_path = `/fonts/Vazir.ttf`; //`/fonts/custom.ttf` 'Vazir';
 ox = 0;
 const DATE_BUT_SIZE = 37;
@@ -24,39 +26,123 @@ export const gap_v = DATE_BUT_SIZE+8;
 export const gap_h = gap_v;
 
 export const hijri_offset = -1;
+var month_jump = 0; // current month
 
 
-export function getMovedDates(month_jump, date_in_g,day_of_week){
-  date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
+export function draw_month(date_in_g,day_of_week){
+  // date_in_g, day_of_week = getMovedDates(date_in_g,day_of_week);
+  group = view_new_cal(date_in_g,day_of_week);
+  return group
+}
+// export function re_draw_month(group,date_in_g,day_of_week){
+//   deleteWidget(group);
+//   date_in_g,day_of_week = getMovedDates(date_in_g,day_of_week);
+//   group = view_new_cal(date_in_g,day_of_week);
+//   return group
+// }
+
+export function create_month_buttons(group, date_in_g,day_of_week){
+
+    const next_month = createWidget(widget.BUTTON, {
+      x: px(230+180),
+      y: px(230-MONTHS_BUT_SIZE-30),
+      w: px(MONTHS_BUT_SIZE/2),
+      h: px(MONTHS_BUT_SIZE),
+      color: 0xffffff,
+      text_size: 25,
+      // align_h: align.CENTER_H,
+      // align_v: align.CENTER_V,
+      radius: px(5),
+      normal_color: 0x000000,
+      press_color: 0xff00ff,
+      text: '▲',
+      click_func: () => {
+        month_jump -= 1;
+        deleteWidget(group);
+        // page_cal.build();
+        group = draw_month(date_in_g,day_of_week);
+        // set_group_cal(group);
+        }
+      // },
+    });
+    const previous_month = createWidget(widget.BUTTON, {
+      x: px(230+180),
+      y: px(230+30),
+      w: px(MONTHS_BUT_SIZE/2),
+      h: px(MONTHS_BUT_SIZE),
+      color: 0xffffff,
+      text_size: 25,
+      // align_h: align.CENTER_H,
+      // align_v: align.CENTER_V,
+      radius: px(5),
+      normal_color: 0x000000,
+      press_color: 0xff00ff,
+      text: '▼',
+      click_func: () => {
+        month_jump += 1;
+        deleteWidget(group);
+        // page_cal.build();
+        group = draw_month(date_in_g,day_of_week);
+        // set_group_cal(group);
+        }
+    });
+    const current_month = createWidget(widget.BUTTON, {
+      x: px(230+180),
+      y: px(230-30),
+      w: px(MONTHS_BUT_SIZE/2),
+      h: px(MONTHS_BUT_SIZE),
+      color: 0xffffff,
+      text_size: 25,
+      // align_h: align.CENTER_H,
+      // align_v: align.CENTER_V,
+      radius: px(5),
+      normal_color: 0x000000,
+      press_color: 0xff00ff,
+      text: '◯',
+      click_func: () => {
+        month_jump = 0;
+        deleteWidget(group);
+        // page_cal.build();
+        group = draw_month(date_in_g,day_of_week);
+        // set_group_cal(group);
+        }
+    })
+}
+
+
+// export function getMovedDates(date_in_g,day_of_week){
+export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
+ 
+  let date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
     
   jump_cnt = month_jump;
-    while (jump_cnt !=0){
-      date_in_p_c = date_in_p;
-      date_in_p[1] += Math.sign(jump_cnt);
-      if (date_in_p[1]> 12){
-        date_in_p[1] = 1;
-        date_in_p[0] += 1;
-      } else if (date_in_p[1] < 1){
-        date_in_p[1] = 12;
-        date_in_p[0] -= 1;
-      }
-      if (jump_cnt > 0){
-        current_month_length = jalaaliMonthLength(date_in_p_c[0],date_in_p_c[1]);
-        day_of_week = positive_mod((current_month_length+day_of_week-1), 7)+1;      
-      } else if (jump_cnt < 0){
-        prev_month_length = jalaaliMonthLength(date_in_p[0],date_in_p[1]);
-        day_of_week = positive_mod((-prev_month_length-1+day_of_week), 7)+1;      
-      }
-      // day_of_week = positive_mod((Math.sign(jump_cnt)*current_month_length+day_of_week), 7)+1;
-      jump_cnt -= Math.sign(jump_cnt);
+  while (jump_cnt !=0){
+    var date_in_p_c = date_in_p;
+    date_in_p[1] += Math.sign(jump_cnt);
+    if (date_in_p[1]> 12){
+      date_in_p[1] = 1;
+      date_in_p[0] += 1;
+    } else if (date_in_p[1] < 1){
+      date_in_p[1] = 12;
+      date_in_p[0] -= 1;
     }
-    date_in_g = jalaliToGregorian(date_in_p[0], date_in_p[1], date_in_p[2]);
-  return date_in_g,day_of_week
+    if (jump_cnt > 0){
+      current_month_length = jalaaliMonthLength(date_in_p_c[0],date_in_p_c[1]);
+      day_of_week = positive_mod((current_month_length+day_of_week-1), 7)+1;      
+    } else if (jump_cnt < 0){
+      prev_month_length = jalaaliMonthLength(date_in_p[0],date_in_p[1]);
+      day_of_week = positive_mod((-prev_month_length-1+day_of_week), 7)+1;      
+    }
+    // day_of_week = positive_mod((Math.sign(jump_cnt)*current_month_length+day_of_week), 7)+1;
+    jump_cnt -= Math.sign(jump_cnt);
   }
+  date_in_g = jalaliToGregorian(date_in_p[0], date_in_p[1], date_in_p[2]);
+//   return (date_in_g,day_of_week)
+//   }
 
-// date_in_g = [2024,4,6];
-    // day_of_week = 6;
-export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,holidays_of_month, Events_of_month, 
+// // date_in_g = [2024,4,6];
+//     // day_of_week = 6;
+// export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
   // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month){
     if (day_of_week < 6)
       day_of_week_persian = day_of_week+2;
@@ -69,7 +155,7 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
     date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
     // date_in_p = miladi_be_shamsi(today.getFullYear(), today.getMonth(), today.getDate()) 
     // date_in_p = [1403,1,14];
-    month_txt = get_persian_month(date_in_p[1]);
+    let month_txt = get_persian_month(date_in_p[1]);
     today_date_pr = date_in_p[2];
     today_year_pr = date_in_p[0];
     today_month_pr =  date_in_p[1];
@@ -86,7 +172,7 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
     // hijri_day_in_per_month = state.data.hijri_day_in_per_month;
     
 
-     const group = createWidget(widget.GROUP, Param)
+    group = createWidget(widget.GROUP, Param);
 
     // Creating UI sub-widgets
     date_info = group.createWidget(widget.TEXT, {
@@ -114,6 +200,34 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
       ' ',conv_year2per(hijri_year_in_per_month[today_date_pr-1])), //today.toString(), //
       Font: font_path,
     })
+    // print month
+    month_top_info = group.createWidget(widget.TEXT, {
+      x: px(screen_center_h-200/2+10),
+      y: px(-4* gap_v + screen_center_v-10),
+      w: 200,
+      h: 60,
+      color: 0xffffff,
+      text_size: 20,
+      align_h: align.CENTER_H,
+      align_v: align.CENTER_V,
+      text: ''.concat(get_persian_day(day_of_week_persian),
+      ' ', persian_conv[`${today_date_pr}`],' ',month_txt,
+      ' ',conv_year2per(today_year_pr)),
+      Font: font_path,
+    })
+  if (month_jump!= 0){
+      if (month_jump> 0)
+          jump_mode_txt = 'ماه بعد';
+      else
+          jump_mode_txt = 'ماه قبل';
+      plt_month_txt = '('.concat(persian_conv[`${Math.abs(month_jump)}`],
+          ' ', jump_mode_txt);
+      // month_txt = get_persian_month(date_in_p[1]);
+      month_top_info.setProperty(prop.MORE, {
+          text : ''.concat(plt_month_txt,') ',month_txt,
+          ' ',conv_year2per(today_year_pr)),
+        })
+  }
 
     for (let i = 1; i <= jalaaliMonthLength(today_year_pr,today_month_pr); i++) { 
       row_idx = Math.floor((i+day_of_week_in_month_start-1)/7) + 1;
@@ -130,7 +244,7 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
       else
         date_color = 0xffffff; // normal day color
 
-      const cal_day = group.createWidget(widget.BUTTON, {
+      cal_day = group.createWidget(widget.BUTTON, {
           x: px(pos_x),
           y: px(pos_y),
           w: px(DATE_BUT_SIZE),
@@ -143,19 +257,23 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
           normal_color: 0x202020,
           press_color: 0x00ffff,
           // text: 'Hello',
-          click_func: (button_widget) => {
+          click_func: () => { // button_widget
             date_info.setProperty(prop.MORE, {
               text : Events_of_month[i-1],
             }),
             date_info_sel.setProperty(prop.MORE, {
               text : ''.concat(persian_conv[`${hijri_day_in_per_month[i-1]}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month[i-1]],
               ' ',conv_year2per(hijri_year_in_per_month[i-1])),
+            }),
+            month_top_info.setProperty(prop.MORE, {
+              text : ''.concat(get_persian_day(1+positive_mod(day_of_week_in_month_start+i-1,7)),
+              ' ', persian_conv[`${i}`],' ',get_persian_month(today_month_pr),
+              ' ',conv_year2per(today_year_pr)),
             })
           },
           text: persian_conv[`${i}`],
           Font: font_path,
         })
-
     }
     // pos_x = 6 * gap_h + screen_center_h;
     group.createWidget(widget.FILL_RECT, {
@@ -181,33 +299,7 @@ export function view_new_cal(date_in_g,day_of_week,month_jump){//,month_jump,hol
         Font: font_path,
       })
     }
-    // print month
-    month_top_info = group.createWidget(widget.TEXT, {
-        x: px(screen_center_h-200/2+10),
-        y: px(-4* gap_v + screen_center_v-10),
-        w: 200,
-        h: 60,
-        color: 0xffffff,
-        text_size: 20,
-        align_h: align.CENTER_H,
-        align_v: align.CENTER_V,
-        text: ''.concat(get_persian_day(day_of_week_persian),
-        ' ', persian_conv[`${today_date_pr}`],' ',month_txt,
-        ' ',conv_year2per(today_year_pr)),
-        Font: font_path,
-      })
-    if (month_jump!= 0){
-        if (month_jump> 0)
-            jump_mode_txt = 'ماه بعد';
-        else
-            jump_mode_txt = 'ماه قبل';
-        plt_month_txt = '('.concat(persian_conv[`${Math.abs(month_jump)}`],
-            ' ', jump_mode_txt);
-        month_top_info.setProperty(prop.MORE, {
-            text : ''.concat(plt_month_txt,') ',month_txt,
-            ' ',conv_year2per(today_year_pr)),
-          })
-    }
+    
     setPageBrightTime({
         brightTime: 60000,
       })
