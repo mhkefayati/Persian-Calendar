@@ -8,14 +8,17 @@ import {persian_conv,gregorian_to_jalali,
 import { jalaaliMonthLength, toGregorian } from '../page/jalali-util-date.js';
 import { log as Logger, px } from "@zos/utils";
 
-const text_hight = 60;
+const text_hight = 80;
 const text_width = 400;
 const line_spacing = text_hight;
 const screen_center_v = Math.floor(466/2)-text_hight*2-20;
 const screen_center_h = Math.floor((466 - text_width)/2);
+// var group = createWidget(widget.GROUP, Param);
+
 AppWidget({
   build() {
       let today = new Date(); // .toLocaleDateString('fa-IR');
+      today.setUTCHours(today.getUTCHours() - 3.5);
     var date_in_g = [today.getFullYear(), today.getMonth()+1, today.getDate()];
     day_of_week = today.getDay();
     
@@ -29,28 +32,28 @@ AppWidget({
     month_txt = get_persian_month(date_in_p[1]);
     month_txt_g = get_geo_month(date_in_g[1]);
     
-    d_per_with_off = date_in_p[2]+hijri_offset;
-    y_per_with_off = date_in_p[0];
-    m_per_with_off =  date_in_p[1];
-    if (d_per_with_off > jalaaliMonthLength(y_per_with_off,m_per_with_off)){
-      d_per_with_off = d_per_with_off - jalaaliMonthLength(y_per_with_off,m_per_with_off);
-      m_per_with_off = m_per_with_off +1;
-      if (m_per_with_off > 12)
-        y_per_with_off = y_per_with_off + 1;
-    }
-    else if (d_per_with_off < 1){
-        m_per_with_off = m_per_with_off -1;
-        if (m_per_with_off < 1){
-            m_per_with_off = 12;
-            y_per_with_off = y_per_with_off - 1;
-        }
-      d_per_with_off = jalaaliMonthLength(y_per_with_off,m_per_with_off)+d_per_with_off;
-  }
-    year_h, month_h, day_h = get_hijri_from_persian(y_per_with_off,m_per_with_off,d_per_with_off);
+  //   d_per_with_off = date_in_p[2]+hijri_offset;
+  //   y_per_with_off = date_in_p[0];
+  //   m_per_with_off =  date_in_p[1];
+  //   if (d_per_with_off > jalaaliMonthLength(y_per_with_off,m_per_with_off)){
+  //     d_per_with_off = d_per_with_off - jalaaliMonthLength(y_per_with_off,m_per_with_off);
+  //     m_per_with_off = m_per_with_off +1;
+  //     if (m_per_with_off > 12)
+  //       y_per_with_off = y_per_with_off + 1;
+  //   }
+  //   else if (d_per_with_off < 1){
+  //       m_per_with_off = m_per_with_off -1;
+  //       if (m_per_with_off < 1){
+  //           m_per_with_off = 12;
+  //           y_per_with_off = y_per_with_off - 1;
+  //       }
+  //     d_per_with_off = jalaaliMonthLength(y_per_with_off,m_per_with_off)+d_per_with_off;
+  // }
+  //   year_h, month_h, day_h = get_hijri_from_persian(y_per_with_off,m_per_with_off,d_per_with_off);
     
     month_top_info_g = createWidget(widget.TEXT, {
       x: px(screen_center_h),
-      y: px(screen_center_v),
+      y: px(screen_center_v + line_spacing/2), //px(screen_center_v),
       w: text_width,
       h: text_hight,
       color: 0xffffff,
@@ -65,7 +68,7 @@ AppWidget({
 
     month_top_info = createWidget(widget.TEXT, {
       x: px(screen_center_h),
-      y: px(screen_center_v - line_spacing),
+      y: px(screen_center_v - line_spacing/2),
       w: text_width,
       h: text_hight,
       color: 0xffffff,
@@ -77,19 +80,19 @@ AppWidget({
       ' ',conv_year2per(date_in_p[0])),
       // Font: font_path,
     })
-    date_info_sel = createWidget(widget.TEXT, {
-      x: px(screen_center_h),
-      y: px(screen_center_v + line_spacing),
-      w: text_width,
-      h: text_hight,
-      color: 0xffffff,
-      text_size: 35,
-      align_h: align.CENTER_H,
-      align_v: align.CENTER_V, // hijri_year_in_per_month, hijri_month_in_per_month, hijri_date_in_per_month
-      text:  ''.concat(persian_conv[`${day_h}`],' ',ARABIC_MONTH_NAMES[month_h],
-      ' ',conv_year2per(year_h)), //today.toString(), //
-      Font: font_path,
-    })
+    // date_info_sel = createWidget(widget.TEXT, {
+    //   x: px(screen_center_h),
+    //   y: px(screen_center_v + line_spacing),
+    //   w: text_width,
+    //   h: text_hight,
+    //   color: 0xffffff,
+    //   text_size: 35,
+    //   align_h: align.CENTER_H,
+    //   align_v: align.CENTER_V, // hijri_year_in_per_month, hijri_month_in_per_month, hijri_date_in_per_month
+    //   text:  ''.concat(persian_conv[`${day_h}`],' ',ARABIC_MONTH_NAMES[month_h],
+    //   ' ',conv_year2per(year_h)), //today.toString(), //
+    //   Font: font_path,
+    // })
     // const text = createWidget(widget.TEXT, {
     //   x: 96,
     //   y: 120,
@@ -102,5 +105,11 @@ AppWidget({
     //   text_style: text_style.NONE,
     //   text: 'HELLO, not OS'
     // })
+  },
+  onResume(){
+    deleteWidget(month_top_info_g);
+    deleteWidget(month_top_info);
+    // group = createWidget(widget.GROUP, Param);
+    this.build();
   }
 })

@@ -144,7 +144,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
 //     // day_of_week = 6;
 // export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
   // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month){
-    if (day_of_week < 6)
+    if (day_of_week < 6)// 6 is sat
       day_of_week_persian = day_of_week+2;
     else
       day_of_week_persian = day_of_week-5;

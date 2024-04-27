@@ -23,10 +23,7 @@
   "targets": {
     "default": {
       "module": {
-        "app-service": {
-          "services": ["page/index"]
-        },
-        "page": {
+       "page": {
           "pages": [
             "page/index"
           ]

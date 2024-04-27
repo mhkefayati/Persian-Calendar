@@ -26,10 +26,7 @@ MONTHS_BUT_SIZE = 55;
 
 // let group_gl;
 const logger = Logger.getLogger("my_app");
-
-// export function set_group_cal(group){
-//   group_gl = group;
-// };
+// cd /Applications/simulator.app/Contents/MacOS && sudo -s ./simulator
 
 Page({
   build() {
@@ -37,11 +34,19 @@ Page({
     console.log(getText('example'))
     
     let today = new Date(); // .toLocaleDateString('fa-IR');
+    today.setUTCHours(today.getUTCHours() - 3.5);
+    // let today = getLocaLTime();
+    // today = today.toLocaleString('en-US', { timeZone: 'Asia/Tehran' });
+    // today. 
     var date_in_g = [today.getFullYear(), today.getMonth()+1, today.getDate()];
-    var day_of_week = today.getDay();
+    var day_of_week = today.getDay();//Sunday = 0
 
     group_gl = draw_month(date_in_g,day_of_week);
     create_month_buttons(group_gl, date_in_g,day_of_week);
+  },
+  onResume(){
+    this.build();
   }
+
 })
 
