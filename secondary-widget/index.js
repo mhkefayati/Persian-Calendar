@@ -12,7 +12,7 @@ import { log as Logger, px } from "@zos/utils";
 const text_hight = 70;
 const text_width = 400;
 const line_spacing = text_hight;
-const screen_center_v = Math.floor(466)-text_hight*2-20;
+const screen_center_v = Math.floor(466/2)-text_hight*2-20;
 const screen_center_h = Math.floor((466 - text_width)/2);
 
 SecondaryWidget({ // Widget
@@ -78,7 +78,7 @@ SecondaryWidget({ // Widget
     y: px(screen_center_v - line_spacing/2),
     w: text_width,
     h: text_hight,
-    color: event_color,
+    color: 0xffffff,
     text_size: 40,
     align_h: align.CENTER_H,
     align_v: align.CENTER_V,
