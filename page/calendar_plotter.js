@@ -15,6 +15,7 @@ import { jalaaliMonthEvents } from './date_events_handlers.js';
 import { setPageBrightTime, resetPageBrightTime, pauseDropWristScreenOff} from '@zos/display'
 import {jalaliToGregorian} from './date_conversion_functions.js'
 // import {set_group_cal} from './index.js'
+import { push } from '@zos/router'
 
 export const font_path = `/fonts/Vazir.ttf`; //`/fonts/custom.ttf` 'Vazir';
 ox = 0;
@@ -24,7 +25,7 @@ export const screen_center_h = px(240-DATE_BUT_SIZE/2);
 table_offset_v = 30;
 export const gap_v = DATE_BUT_SIZE+8;
 export const gap_h = gap_v;
-
+var MONTHS_BUT_SIZE = 55;
 export const hijri_offset = -1;
 var month_jump = 0; // current month
 
@@ -105,6 +106,34 @@ export function create_month_buttons(group, date_in_g,day_of_week){
         // page_cal.build();
         group = draw_month(date_in_g,day_of_week);
         // set_group_cal(group);
+        }
+    });
+    const donation = createWidget(widget.BUTTON, {
+      x: px(230-200),
+      y: px(230-30),
+      w: px(MONTHS_BUT_SIZE/2),
+      h: px(MONTHS_BUT_SIZE),
+      color: 0xffffff,
+      text_size: 25,
+      // align_h: align.CENTER_H,
+      // align_v: align.CENTER_V,
+      radius: px(5),
+      normal_color: 0x000000,
+      press_color: 0xff00ff,
+      text: '$$',
+      click_func: () => {
+        // month_jump = 0;
+        // deleteWidget(group);
+        // page_cal.build();
+        // group = draw_month(date_in_g,day_of_week);
+        // set_group_cal(group);
+        push({
+          url: 'page/index_donation',
+          // params: {
+          //   id: '0',
+          //   type: 'normal'
+          // }
+        })
         }
     })
 }
@@ -224,10 +253,14 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
       plt_month_txt = '('.concat(persian_conv[`${Math.abs(month_jump)}`],
           ' ', jump_mode_txt);
       // month_txt = get_persian_month(date_in_p[1]);
+      NEW_TEXT = ''.concat(plt_month_txt,') ',month_txt,
+          ' ',conv_year2per(today_year_pr));
       month_top_info.setProperty(prop.MORE, {
-          text : ''.concat(plt_month_txt,') ',month_txt,
-          ' ',conv_year2per(today_year_pr)),
-        })
+          text : NEW_TEXT
+        }),
+      month_top_info.setProperty(prop.MORE, {
+        text_size : Math.floor(NEW_TEXT/TEXT_TOP.length*2.1),
+      })
   }
 
     for (let i = 1; i <= jalaaliMonthLength(today_year_pr,today_month_pr); i++) { 
@@ -309,4 +342,5 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
       })
     return group
 }   
+
 

@@ -1,5 +1,5 @@
 // Shortcut Cards
-import { createWidget, widget, align, text_style } from '@zos/ui'
+import { createWidget, widget, align, text_style, getAppWidgetSize} from '@zos/ui'
 import {get_hijri_from_persian,jalaaliDayEvents} from '../page/date_events_handlers'
 import {hijri_offset,font_path} from '../page/calendar_plotter'
 import { ARABIC_MONTH_NAMES} from '../page/hijri-util-date.js';
@@ -10,7 +10,7 @@ import { jalaaliMonthLength, toGregorian } from '../page/jalali-util-date.js';
 import { log as Logger, px } from "@zos/utils";
 
 const text_hight = 70;
-const text_width = 370;
+const text_width =  370; // getAppWidgetSize().w; //
 const line_spacing = text_hight * 1.5;
 const screen_center_v = Math.floor(466/2)-text_hight*2-20;
 const screen_center_h = Math.floor((466 - text_width)/2);

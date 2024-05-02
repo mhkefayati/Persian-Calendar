@@ -25,7 +25,7 @@
       "module": {
        "page": {
           "pages": [
-            "page/index"
+            "page/index", "page/index_donation"
           ]
         },
         "secondary-widget": {

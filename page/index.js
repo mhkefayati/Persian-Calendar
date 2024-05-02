@@ -22,7 +22,7 @@ import {persian_conv,gregorian_to_jalali,
 // var moment = require('moment-hijri');
 // import { Time } from '@zos/sensor'
 // const timeSensor = new Time()
-MONTHS_BUT_SIZE = 55;
+
 
 // let group_gl;
 const logger = Logger.getLogger("my_app");

@@ -1,4 +1,5 @@
 import { getText } from '@zos/i18n'
+import { push } from '@zos/router'
 import { readFileSync , writeFileSync,mkdirSync} from '@zos/fs'
 import * as Styles from 'zosLoader:./index.[pf].layout.js'
 import { getTextLayout, createWidget, widget, deleteWidget, event, prop,anim_status} from '@zos/ui'
@@ -22,9 +23,10 @@ import {persian_conv,gregorian_to_jalali,
 // var moment = require('moment-hijri');
 // import { Time } from '@zos/sensor'
 // const timeSensor = new Time()
-MONTHS_BUT_SIZE = 55;
+// MONTHS_BUT_SIZE = 55;
 
 // let group_gl;
+const MONTHS_BUT_SIZE = 55;
 const logger = Logger.getLogger("my_app");
 // cd /Applications/simulator.app/Contents/MacOS && sudo -s ./simulator
 
@@ -43,6 +45,34 @@ Page({
 
     // group_gl = draw_month(date_in_g,day_of_week);
     // create_month_buttons(group_gl, date_in_g,day_of_week);
+    const exit_donation = createWidget(widget.BUTTON, {
+      x: px(230-220),
+      y: px(230-30),
+      w: px(MONTHS_BUT_SIZE/2),
+      h: px(MONTHS_BUT_SIZE),
+      color: 0xffffff,
+      text_size: 25,
+      // align_h: align.CENTER_H,
+      // align_v: align.CENTER_V,
+      radius: px(5),
+      normal_color: 0x000000,
+      press_color: 0xff00ff,
+      text: '«',
+      click_func: () => {
+        // month_jump = 0;
+        // deleteWidget(group);
+        // page_cal.build();
+        // group = draw_month(date_in_g,day_of_week);
+        // set_group_cal(group);
+        push({
+          url: 'page/index',
+          // params: {
+          //   id: '0',
+          //   type: 'normal'
+          // }
+        })
+        }
+    })
     const imgAnimation = createWidget(widget.IMG_ANIM, {
       anim_path: 'anim',
       anim_prefix: 'animation',
@@ -55,7 +85,22 @@ Page({
       y: 33,
       // anim_complete_call: () => {
       //   console.log('animation complete')
+      // click_func: () => {
+      //   // month_jump = 0;
+      //   // deleteWidget(group);
+      //   // page_cal.build();
+      //   // group = draw_month(date_in_g,day_of_week);
+      //   // set_group_cal(group);
+      //   push({
+      //     url: 'page/index',
+      //     // params: {
+      //     //   id: '0',
+      //     //   type: 'normal'
+      //     // }
+      //   })
+        // }
       })
+      
     // })
     // const img_hour = createWidget(widget.IMG)
     // img_hour.setProperty(prop.MORE, {
