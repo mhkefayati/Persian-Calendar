@@ -9,16 +9,19 @@ import {persian_conv,gregorian_to_jalali,
 import { jalaaliMonthLength, toGregorian } from '../page/jalali-util-date.js';
 import { log as Logger, px } from "@zos/utils";
 
-const text_hight = 70;
-const text_width = 400;
-const line_spacing = text_hight;
-const screen_center_v = Math.floor(466/2)-text_hight*2-20;
-const screen_center_h = Math.floor((466 - text_width)/2);
+var text_hight = 70;
+var text_width = 370;
+var line_spacing = text_hight*1.5;
+var screen_center_v = Math.floor(466/2)-text_hight*2-20;
+var screen_center_h = Math.floor((466 - text_width)/2);
+var day_events_info = null;
+var month_top_info = null;
+var month_top_info2 = null;
 
 SecondaryWidget({ // Widget
   build() {
     let today = new Date(); // .toLocaleDateString('fa-IR');
-    today.setUTCHours(today.getUTCHours() - 3.5);
+    today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);
   var date_in_g = [today.getFullYear(), today.getMonth()+1, today.getDate()];
   day_of_week = today.getDay();
   
@@ -73,45 +76,50 @@ SecondaryWidget({ // Widget
   else
     event_color = 0x00ffff;
   Events_of_day = Events_of_month;
-  month_top_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v - line_spacing/2),
-    w: text_width,
-    h: text_hight,
-    color: 0xffffff,
-    text_size: 40,
-    align_h: align.CENTER_H,
-    align_v: align.CENTER_V,
-    text: ''.concat(day_of_week_persian_txt),
-    // Font: font_path,
-  })
-  month_top_info2 = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v ),
-    w: text_width,
-    h: text_hight,
-    color: event_color,
-    text_size: 35,
-    align_h: align.CENTER_H,
-    align_v: align.CENTER_V,
-    text: ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
-    ' ',conv_year2per(date_in_p[0])),
-    // Font: font_path,
-  })
+  // month_top_info = createWidget(widget.TEXT, {
+  //   x: px(screen_center_h),
+  //   y: px(screen_center_v - line_spacing/2),
+  //   w: text_width,
+  //   h: text_hight,
+  //   color: 0xffffff,
+  //   text_size: 40,
+  //   align_h: align.CENTER_H,
+  //   align_v: align.CENTER_V,
+  //   text: ''.concat(day_of_week_persian_txt),
+  //   // Font: font_path,
+  // })
+  // month_top_info2 = createWidget(widget.TEXT, {
+  //   x: px(screen_center_h),
+  //   y: px(screen_center_v ),
+  //   w: text_width,
+  //   h: text_hight,
+  //   color: event_color,
+  //   text_size: 35,
+  //   align_h: align.CENTER_H,
+  //   align_v: align.CENTER_V,
+  //   text: ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
+  //   ' ',conv_year2per(date_in_p[0])),
+  //   // Font: font_path,
+  // })
   
-  day_events_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v + line_spacing/2),
-    w: text_width-40,
-    h: text_hight*4,
-    color: 0xffffff,
-    text_size: 30,
-    align_h: align.CENTER_H,
-    align_v: align.CENTER_V,
-    text: Events_of_day,
-    wrapped: text_width-40
-    // Font: font_path,
-  })
+  // day_events_info = createWidget(widget.TEXT, {
+  //   x: px(screen_center_h),
+  //   y: px(screen_center_v + line_spacing/2),
+  //   w: text_width-40,
+  //   h: text_hight*4,
+  //   color: 0xffffff,
+  //   text_size: 30,
+  //   align_h: align.CENTER_H,
+  //   align_v: align.CENTER_V,
+  //   text: Events_of_day,
+  //   wrapped: text_width-40
+  //   // Font: font_path,
+  // })
+  TEXT1 = ''.concat(day_of_week_persian_txt);
+  TEXT2 = ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
+  ' ',conv_year2per(date_in_p[0]));
+  TEXT3 = Events_of_day;
+  day_events_info,month_top_info,month_top_info2 = draw_widgets(TEXT1,TEXT2,TEXT3);
   //
 
   // date_info_sel = createWidget(widget.TEXT, {
@@ -149,3 +157,46 @@ onResume(){
   this.build();
 }
 })
+
+function draw_widgets(TEXT1,TEXT2,TEXT3){
+  size1 = Math.floor(text_width/TEXT1.length*2.1);
+  month_top_info = createWidget(widget.TEXT, {
+    x: px(screen_center_h),
+    y: px(screen_center_v - line_spacing/2),
+    w: text_width,
+    h: text_hight,
+    color: 0xffffff,
+    text_size: size1,//Math.floor(text_width/length(TEXT1)),
+    align_h: align.CENTER_H,
+    align_v: align.TOP,
+    text: TEXT1, // ''.concat(day_of_week_persian_txt),
+    // Font: font_path,
+  })
+  month_top_info2 = createWidget(widget.TEXT, {
+    x: px(screen_center_h),
+    y: px(screen_center_v ),
+    w: text_width,
+    h: text_hight,
+    color: event_color,
+    text_size: Math.floor(size1*.9),
+    align_h: align.CENTER_H,
+    align_v: align.TOP,
+    text: TEXT2,// ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
+    // ' ',conv_year2per(date_in_p[0])),
+    // Font: font_path,
+  })
+  day_events_info = createWidget(widget.TEXT, {
+    x: px(screen_center_h),
+    y: px(screen_center_v+ line_spacing/2),
+    w: text_width,
+    h: text_hight*2,
+    color: 0xffffff,
+    text_size: Math.floor(size1*.9),
+    align_h: align.CENTER_H,
+    align_v: align.TOP,
+    text: TEXT3, // Events_of_day,
+    text_style: text_style.WRAP
+    // Font: font_path,
+  })
+  return day_events_info,month_top_info,month_top_info2
+}

@@ -34,7 +34,7 @@ Page({
     console.log(getText('example'))
     
     let today = new Date(); // .toLocaleDateString('fa-IR');
-    today.setUTCHours(today.getUTCHours() - 3.5);
+    today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);
     // let today = getLocaLTime();
     // today = today.toLocaleString('en-US', { timeZone: 'Asia/Tehran' });
     // today. 

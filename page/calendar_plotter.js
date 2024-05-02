@@ -201,18 +201,19 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
       Font: font_path,
     })
     // print month
+    TEXT_TOP = ''.concat(get_persian_day(day_of_week_persian),
+      ' ', persian_conv[`${today_date_pr}`],' ',month_txt,
+      ' ',conv_year2per(today_year_pr));
     month_top_info = group.createWidget(widget.TEXT, {
       x: px(screen_center_h-200/2+10),
       y: px(-4* gap_v + screen_center_v-10),
       w: 200,
       h: 60,
       color: 0xffffff,
-      text_size: 20,
+      text_size: Math.floor(200/TEXT_TOP.length*2.1),
       align_h: align.CENTER_H,
       align_v: align.CENTER_V,
-      text: ''.concat(get_persian_day(day_of_week_persian),
-      ' ', persian_conv[`${today_date_pr}`],' ',month_txt,
-      ' ',conv_year2per(today_year_pr)),
+      text: TEXT_TOP,
       Font: font_path,
     })
   if (month_jump!= 0){
