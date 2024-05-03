@@ -8,18 +8,21 @@ import {persian_conv,gregorian_to_jalali,
   num_days_in_month,positive_mod} from '../page/date_conversion_functions.js'
 import { jalaaliMonthLength, toGregorian } from '../page/jalali-util-date.js';
 import { log as Logger, px } from "@zos/utils";
+import { setAppWidgetSize } from '@zos/ui'
 
-const text_hight = 70;
+
+const text_hight = 80;
 const text_width =  370; // getAppWidgetSize().w; //
 const line_spacing = text_hight * 1.5;
-const screen_center_v = Math.floor(466/2)-text_hight*2-20;
-const screen_center_h = Math.floor((466 - text_width)/2);
+const screen_center_v = Math.floor(line_spacing/2);//Math.floor(466/2);//-text_hight*2-20;
+const screen_center_h = Math.floor((466-text_width)/2);//Math.floor((466-getAppWidgetSize().w)/2);//Math.floor(466/2);//Math.floor((466 - text_width)/2);
 // var group = createWidget(widget.GROUP, Param);
 var day_events_info = null;
 var day_geo_info = null;
 var day_hij_info  = null;
 var day_per_info = null;
-
+// setAppWidgetSize({ h: 100 })
+// setAppWidgetSize({ h: 20});
 AppWidget({ // Shortcut Cards
   build() {
       let today = new Date(); // .toLocaleDateString('fa-IR');
@@ -117,16 +120,22 @@ AppWidget({ // Shortcut Cards
     //   // Font: font_path,
     // })
     // //
-    TEXT1 = ''.concat(day_of_week_persian_txt,
-      ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
+    TEXT0 = day_of_week_persian_txt;
+    TEXT1 = ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
       ' ',conv_year2per(date_in_p[0]));
     TEXT2 = ''.concat(persian_conv[`${hijri_day_in_per_month}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month],
     ' ',conv_year2per(hijri_year_in_per_month));
     TEXT3 = ''.concat(persian_conv[`${date_in_g[2]}`],' ',month_txt_g,
     ' ',conv_year2per(date_in_g[0]));
     TEXT4 = Events_of_day;
-    day_events_info, day_geo_info, day_hij_info, day_per_info = 
-      draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color);
+    if (TEXT4.length < 4)
+      height_2_set = line_spacing * 2;
+    else
+      height_2_set = line_spacing* (2+ Math.floor(TEXT4.length/ TEXT1.length));
+
+    setAppWidgetSize({ h: height_2_set});
+    this.day_per_info0,this.day_events_info, this.day_geo_info, this.day_hij_info, this.day_per_info = 
+      draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color);
     // date_info_sel = createWidget(widget.TEXT, {
     //   x: px(screen_center_h),
     //   y: px(screen_center_v + line_spacing),
@@ -155,20 +164,35 @@ AppWidget({ // Shortcut Cards
   },
   onResume(){
     // deleteWidget(month_top_info_g);
-    deleteWidget(day_events_info);
-    deleteWidget(day_geo_info);
-    deleteWidget(day_hij_info);
-    deleteWidget(day_per_info);
+    // deleteWidget(day_per_info0);
+    // deleteWidget(day_events_info);
+    // deleteWidget(day_geo_info);
+    // deleteWidget(day_hij_info);
+    // deleteWidget(day_per_info);
     // group = createWidget(widget.GROUP, Param);
     this.build();
   }
 })
 
-function draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color){
+function draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color){
   size1 = Math.floor(text_width/TEXT1.length*2.1);
-  day_per_info = createWidget(widget.TEXT, {
+  day_per_info0 = createWidget(widget.TEXT, {
     x: px(screen_center_h),
     y: px(screen_center_v - line_spacing/2),
+    w: text_width,
+    h: text_hight,
+    color: event_color,
+    text_size: Math.floor(size1*.9),
+    align_h: align.CENTER_H,
+    align_v: align.TOP,
+    text: TEXT0, //''.concat(day_of_week_persian_txt,
+    // ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
+    // ' ',conv_year2per(date_in_p[0])),
+    // Font: font_path,
+  })
+  day_per_info = createWidget(widget.TEXT, {
+    x: px(screen_center_h),
+    y: px(screen_center_v),
     w: text_width,
     h: text_hight,
     color: event_color,
@@ -182,10 +206,10 @@ function draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color){
   })
   day_hij_info = createWidget(widget.TEXT, {
     x: px(screen_center_h),
-    y: px(screen_center_v ),
+    y: px(screen_center_v + line_spacing/2),
     w: text_width,
     h: text_hight,
-    color: 0xffffff,
+    color: event_color,
     text_size: Math.floor(size1*.9),
     align_h: align.CENTER_H,
     align_v: align.TOP,
@@ -196,7 +220,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color){
   
   day_geo_info = createWidget(widget.TEXT, {
     x: px(screen_center_h),
-    y: px(screen_center_v + line_spacing/2),
+    y: px(screen_center_v + line_spacing),
     w: text_width,
     h: text_hight,
     color: event_color,
@@ -210,7 +234,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color){
 
   day_events_info = createWidget(widget.TEXT, {
     x: px(screen_center_h),
-    y: px(screen_center_v + line_spacing),
+    y: px(screen_center_v + 3*line_spacing/2),
     w: text_width-40,
     h: text_hight*2,
     color: 0xffffff,
@@ -221,5 +245,5 @@ function draw_widgets(TEXT1,TEXT2,TEXT3,TEXT4,event_color){
     text_style: text_style.WRAP
     // Font: font_path,
   })
-  return day_events_info, day_geo_info, day_hij_info, day_per_info
+  return day_per_info0,day_events_info, day_geo_info, day_hij_info, day_per_info
 }

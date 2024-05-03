@@ -9,31 +9,32 @@ import {persian_conv,gregorian_to_jalali,
 import { jalaaliMonthLength, toGregorian } from '../page/jalali-util-date.js';
 import { log as Logger, px } from "@zos/utils";
 
-var text_hight = 70;
+var text_hight = 55;
 var text_width = 370;
-var line_spacing = text_hight*1.5;
-var screen_center_v = Math.floor(466/2)-text_hight*2-20;
-var screen_center_h = Math.floor((466 - text_width)/2);
-var day_events_info = null;
-var month_top_info = null;
-var month_top_info2 = null;
+const line_spacing = text_hight*5;
+// var screen_center_v = Math.floor(466/2)-text_hight*2-20;
+const screen_center_v = Math.floor((466)/2);
+const screen_center_h = Math.floor((466 - text_width)/2);
+// var day_events_info = null;
+// var month_top_info = null;
+// var month_top_info2 = null;
 
 SecondaryWidget({ // Widget
   build() {
     let today = new Date(); // .toLocaleDateString('fa-IR');
     today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);
-  var date_in_g = [today.getFullYear(), today.getMonth()+1, today.getDate()];
-  day_of_week = today.getDay();
+    var date_in_g = [today.getFullYear(), today.getMonth()+1, today.getDate()];
+    day_of_week = today.getDay();
   
-  date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
-  if (day_of_week < 6)
-    day_of_week_persian = day_of_week+2;
-  else
-    day_of_week_persian = day_of_week-5;
+    date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
+    if (day_of_week < 6)
+      day_of_week_persian = day_of_week+2;
+    else
+      day_of_week_persian = day_of_week-5;
 
-  day_of_week_persian_txt = get_persian_day(day_of_week_persian);
-  month_txt = get_persian_month(date_in_p[1]);
-  month_txt_g = get_geo_month(date_in_g[1]);
+    day_of_week_persian_txt = get_persian_day(day_of_week_persian);
+    month_txt = get_persian_month(date_in_p[1]);
+    month_txt_g = get_geo_month(date_in_g[1]);
   
 //   d_per_with_off = date_in_p[2]+hijri_offset;
 //   y_per_with_off = date_in_p[0];
@@ -71,7 +72,7 @@ SecondaryWidget({ // Widget
   //   ' ',conv_year2per(date_in_g[0])),
   //   // Font: font_path,
   // })
-  if (holidays_of_month || day_of_week_persian == 6)
+  if (holidays_of_month || day_of_week_persian == 7)
     event_color = 0xff0000;
   else
     event_color = 0x00ffff;
@@ -119,7 +120,13 @@ SecondaryWidget({ // Widget
   TEXT2 = ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
   ' ',conv_year2per(date_in_p[0]));
   TEXT3 = Events_of_day;
-  day_events_info,month_top_info,month_top_info2 = draw_widgets(TEXT1,TEXT2,TEXT3);
+  // if (TEXT3.length < 2)
+  //   height_2_set = line_spacing * 1.5;
+  // else
+  //   height_2_set = line_spacing* 2;
+
+  // setAppWidgetSize({ h: height_2_set});
+  this.day_events_info,this.month_top_info,this.month_top_info2 = draw_widgets(TEXT1,TEXT2,TEXT3);
   //
 
   // date_info_sel = createWidget(widget.TEXT, {
@@ -150,22 +157,22 @@ SecondaryWidget({ // Widget
 },
 onResume(){
   // deleteWidget(month_top_info_g);
-  deleteWidget(day_events_info);
-  deleteWidget(month_top_info);
-  deleteWidget(month_top_info2);
+  // deleteWidget(day_events_info);
+  // deleteWidget(month_top_info);
+  // deleteWidget(month_top_info2);
   // group = createWidget(widget.GROUP, Param);
   this.build();
 }
 })
 
 function draw_widgets(TEXT1,TEXT2,TEXT3){
-  size1 = Math.floor(text_width/TEXT1.length*2.1);
+  size1 = Math.min(Math.floor(text_width/TEXT2.length*2.1),text_hight);
   month_top_info = createWidget(widget.TEXT, {
     x: px(screen_center_h),
     y: px(screen_center_v - line_spacing/2),
     w: text_width,
-    h: text_hight,
-    color: 0xffffff,
+    h: Math.floor(line_spacing/2),
+    color: event_color,
     text_size: size1,//Math.floor(text_width/length(TEXT1)),
     align_h: align.CENTER_H,
     align_v: align.TOP,
@@ -176,7 +183,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     x: px(screen_center_h),
     y: px(screen_center_v ),
     w: text_width,
-    h: text_hight,
+    h: Math.floor(line_spacing/2),
     color: event_color,
     text_size: Math.floor(size1*.9),
     align_h: align.CENTER_H,
@@ -189,7 +196,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     x: px(screen_center_h),
     y: px(screen_center_v+ line_spacing/2),
     w: text_width,
-    h: text_hight*2,
+    h: line_spacing,
     color: 0xffffff,
     text_size: Math.floor(size1*.9),
     align_h: align.CENTER_H,

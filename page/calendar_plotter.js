@@ -108,34 +108,34 @@ export function create_month_buttons(group, date_in_g,day_of_week){
         // set_group_cal(group);
         }
     });
-    const donation = createWidget(widget.BUTTON, {
-      x: px(230-200),
+
+    const donation = createWidget(widget.IMG, {
+      x: px(230-210),
       y: px(230-30),
-      w: px(MONTHS_BUT_SIZE/2),
-      h: px(MONTHS_BUT_SIZE),
-      color: 0xffffff,
-      text_size: 25,
-      // align_h: align.CENTER_H,
-      // align_v: align.CENTER_V,
-      radius: px(5),
-      normal_color: 0x000000,
-      press_color: 0xff00ff,
-      text: '$$',
-      click_func: () => {
-        // month_jump = 0;
-        // deleteWidget(group);
-        // page_cal.build();
-        // group = draw_month(date_in_g,day_of_week);
-        // set_group_cal(group);
-        push({
-          url: 'page/index_donation',
-          // params: {
-          //   id: '0',
-          //   type: 'normal'
-          // }
-        })
-        }
+      src: 'donation.png',
+      // click_func: () => {
+      //   // month_jump = 0;
+      //   // deleteWidget(group);
+      //   // page_cal.build();
+      //   // group = draw_month(date_in_g,day_of_week);
+      //   // set_group_cal(group);
+      //   push({
+      //     url: 'page/index_donation',
+      //     // params: {
+      //     //   id: '0',
+      //     //   type: 'normal'
+      //     // }
+      //   })
+      //   }
     })
+    donation.addEventListener(event.CLICK_DOWN, (info) => {
+      push({
+        url: 'page/index_donation',
+        // params: {
+        //   id: '0',
+        //   type: 'normal'
+        // }
+      })})
 }
 
 
@@ -259,7 +259,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
           text : NEW_TEXT
         }),
       month_top_info.setProperty(prop.MORE, {
-        text_size : Math.floor(NEW_TEXT/TEXT_TOP.length*2.1),
+        text_size : Math.floor(200/NEW_TEXT.length*2.1),
       })
   }
 
