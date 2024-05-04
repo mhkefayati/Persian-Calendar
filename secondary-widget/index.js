@@ -11,13 +11,13 @@ import { log as Logger, px } from "@zos/utils";
 
 var text_hight = 55;
 var text_width = 370;
-const line_spacing = text_hight*5;
+const line_spacing = text_hight*3;
 // var screen_center_v = Math.floor(466/2)-text_hight*2-20;
-const screen_center_v = Math.floor((466)/2);
+const screen_center_v = Math.floor((466)/2)-100;
 const screen_center_h = Math.floor((466 - text_width)/2);
-// var day_events_info = null;
-// var month_top_info = null;
-// var month_top_info2 = null;
+var day_events_info = null;
+var month_top_info = null;
+var month_top_info2 = null;
 
 SecondaryWidget({ // Widget
   build() {
@@ -57,6 +57,7 @@ SecondaryWidget({ // Widget
   holidays_of_month, Events_of_month, 
   hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month
    = jalaaliDayEvents(date_in_p[0], date_in_p[1], date_in_p[2],hijri_offset);
+   
   
   // month_top_info_g = createWidget(widget.TEXT, {
   //   x: px(screen_center_h),
@@ -173,7 +174,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     w: text_width,
     h: Math.floor(line_spacing/2),
     color: event_color,
-    text_size: size1,//Math.floor(text_width/length(TEXT1)),
+    text_size: Math.floor(size1*.8),//Math.floor(text_width/length(TEXT1)),
     align_h: align.CENTER_H,
     align_v: align.TOP,
     text: TEXT1, // ''.concat(day_of_week_persian_txt),
@@ -185,7 +186,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     w: text_width,
     h: Math.floor(line_spacing/2),
     color: event_color,
-    text_size: Math.floor(size1*.9),
+    text_size: size1,//Math.floor(size1*.8),
     align_h: align.CENTER_H,
     align_v: align.TOP,
     text: TEXT2,// ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
@@ -198,7 +199,7 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     w: text_width,
     h: line_spacing,
     color: 0xffffff,
-    text_size: Math.floor(size1*.9),
+    text_size: Math.floor(size1*.6),
     align_h: align.CENTER_H,
     align_v: align.TOP,
     text: TEXT3, // Events_of_day,

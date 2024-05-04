@@ -1,6 +1,6 @@
 // Shortcut Cards
 import { createWidget, widget, align, text_style, getAppWidgetSize} from '@zos/ui'
-import {get_hijri_from_persian,jalaaliDayEvents} from '../page/date_events_handlers'
+import {get_hijri_from_persian,jalaaliDayEvents,get_hijri_cal_in_persian_day} from '../page/date_events_handlers'
 import {hijri_offset,font_path} from '../page/calendar_plotter'
 import { ARABIC_MONTH_NAMES} from '../page/hijri-util-date.js';
 import {persian_conv,gregorian_to_jalali,
@@ -41,9 +41,12 @@ AppWidget({ // Shortcut Cards
   month_txt = get_persian_month(date_in_p[1]);
   month_txt_g = get_geo_month(date_in_g[1]);
     
-    holidays_of_month, Events_of_month, 
-    hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month
-     = jalaaliDayEvents(date_in_p[0], date_in_p[1], date_in_p[2],hijri_offset);
+    // holidays_of_month, Events_of_month, 
+    // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month
+    //  = jalaaliDayEvents(date_in_p[0], date_in_p[1], date_in_p[2],hijri_offset);
+
+     hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month
+    = get_hijri_cal_in_persian_day(date_in_p[0], date_in_p[1], date_in_p[2],hijri_offset);
     
     // month_top_info_g = createWidget(widget.TEXT, {
     //   x: px(screen_center_h),
@@ -59,67 +62,12 @@ AppWidget({ // Shortcut Cards
     //   ' ',conv_year2per(date_in_g[0])),
     //   // Font: font_path,
     // })
-    if (holidays_of_month || day_of_week_persian == 7)
+    if (day_of_week_persian == 7)//(holidays_of_month || day_of_week_persian == 7)
       event_color = 0xff0000;
     else
       event_color = 0xffffff;
-    Events_of_day = Events_of_month;
-    // day_per_info = createWidget(widget.TEXT, {
-    //   x: px(screen_center_h),
-    //   y: px(screen_center_v - line_spacing/2),
-    //   w: text_width,
-    //   h: text_hight,
-    //   color: event_color,
-    //   text_size: 35,
-    //   align_h: align.CENTER_H,
-    //   align_v: align.CENTER_V,
-    //   text: ''.concat(day_of_week_persian_txt,
-    //   ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
-    //   ' ',conv_year2per(date_in_p[0])),
-    //   // Font: font_path,
-    // })
-    // day_hij_info = createWidget(widget.TEXT, {
-    //   x: px(screen_center_h),
-    //   y: px(screen_center_v ),
-    //   w: text_width,
-    //   h: text_hight,
-    //   color: 0xffffff,
-    //   text_size: 30,
-    //   align_h: align.CENTER_H,
-    //   align_v: align.CENTER_V,
-    //   text: ''.concat(persian_conv[`${hijri_day_in_per_month}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month],
-    //   ' ',conv_year2per(hijri_year_in_per_month)), //today.toString(), //
-    //   // Font: font_path,
-    // })
+    // Events_of_day = Events_of_month;
     
-    // day_geo_info = createWidget(widget.TEXT, {
-    //   x: px(screen_center_h),
-    //   y: px(screen_center_v + line_spacing/2),
-    //   w: text_width,
-    //   h: text_hight,
-    //   color: event_color,
-    //   text_size: 30,
-    //   align_h: align.CENTER_H,
-    //   align_v: align.CENTER_V,
-    //   text: ''.concat(persian_conv[`${date_in_g[2]}`],' ',month_txt_g,
-    //   ' ',conv_year2per(date_in_g[0])),
-    //   // Font: font_path,
-    // })
-
-    // day_events_info = createWidget(widget.TEXT, {
-    //   x: px(screen_center_h),
-    //   y: px(screen_center_v + line_spacing),
-    //   w: text_width-40,
-    //   h: text_hight*4,
-    //   color: 0xffffff,
-    //   text_size: 25,
-    //   align_h: align.CENTER_H,
-    //   align_v: align.CENTER_V,
-    //   text: Events_of_day,
-    //   wrapped: text_width-40
-    //   // Font: font_path,
-    // })
-    // //
     TEXT0 = day_of_week_persian_txt;
     TEXT1 = ''.concat(persian_conv[`${date_in_p[2]}`],' ',month_txt,
       ' ',conv_year2per(date_in_p[0]));
@@ -127,11 +75,12 @@ AppWidget({ // Shortcut Cards
     ' ',conv_year2per(hijri_year_in_per_month));
     TEXT3 = ''.concat(persian_conv[`${date_in_g[2]}`],' ',month_txt_g,
     ' ',conv_year2per(date_in_g[0]));
-    TEXT4 = Events_of_day;
-    if (TEXT4.length < 4)
-      height_2_set = line_spacing * 2;
-    else
-      height_2_set = line_spacing* (2+ Math.floor(TEXT4.length/ TEXT1.length));
+    TEXT4 = '';//Events_of_day;
+    height_2_set = line_spacing * 2;
+    // if (TEXT4.length < 4)
+    //   height_2_set = line_spacing * 2;
+    // else
+    //   height_2_set = line_spacing* (2+ Math.floor(TEXT4.length/ TEXT1.length));
 
     setAppWidgetSize({ h: height_2_set});
     this.day_per_info0,this.day_events_info, this.day_geo_info, this.day_hij_info, this.day_per_info = 
