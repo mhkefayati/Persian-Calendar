@@ -1,5 +1,5 @@
 // index.js  Widget
-import { createWidget, widget, align, text_style } from '@zos/ui'
+import { createWidget, widget, align, text_style ,deleteWidget,prop} from '@zos/ui'
 import {get_hijri_from_persian,jalaaliDayEvents} from '../page/date_events_handlers'
 import {hijri_offset,font_path} from '../page/calendar_plotter'
 import { ARABIC_MONTH_NAMES} from '../page/hijri-util-date.js';
@@ -15,11 +15,15 @@ const line_spacing = text_hight*3;
 // var screen_center_v = Math.floor(466/2)-text_hight*2-20;
 const screen_center_v = Math.floor((466)/2)-100;
 const screen_center_h = Math.floor((466 - text_width)/2);
-var day_events_info = null;
-var month_top_info = null;
-var month_top_info2 = null;
+// var day_events_info = null;
+// var month_top_info = null;
+// var month_top_info2 = null;
+var widgets_lst = [];
 
-SecondaryWidget({ // Widget
+SecondaryWidget({ // Widgetstate: 
+  // state: {
+  //   widgets_lst : []
+  // },
   build() {
     let today = new Date(); // .toLocaleDateString('fa-IR');
     today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);
@@ -127,7 +131,11 @@ SecondaryWidget({ // Widget
   //   height_2_set = line_spacing* 2;
 
   // setAppWidgetSize({ h: height_2_set});
-  this.day_events_info,this.month_top_info,this.month_top_info2 = draw_widgets(TEXT1,TEXT2,TEXT3);
+  draw_widgets(TEXT1,TEXT2,TEXT3,event_color,widgets_lst);
+  // day_events_info,month_top_info,month_top_info2 = draw_widgets(TEXT1,TEXT2,TEXT3,widgets_lst);
+  // this.state.widgets_lst.push(day_events_info);
+  // this.state.widgets_lst.push(month_top_info);
+  // this.state.widgets_lst.push(month_top_info2);
   //
 
   // date_info_sel = createWidget(widget.TEXT, {
@@ -157,18 +165,42 @@ SecondaryWidget({ // Widget
   // })
 },
 onResume(){
-  // deleteWidget(month_top_info_g);
-  // deleteWidget(day_events_info);
-  // deleteWidget(month_top_info);
+  // try {
+  //   deleteWidget(this.state.widgets_lst[2]);
+  //   deleteWidget(this.state.widgets_lst[1]);
+  //   deleteWidget(this.state.widgets_lst[0]);
+  // } catch (error) {
+    
+  // }
   // deleteWidget(month_top_info2);
   // group = createWidget(widget.GROUP, Param);
   this.build();
 }
 })
 
-function draw_widgets(TEXT1,TEXT2,TEXT3){
+function draw_widgets(TEXT1,TEXT2,TEXT3,event_color,widgets_lst){
   size1 = Math.min(Math.floor(text_width/TEXT2.length*2.1),text_hight);
-  month_top_info = createWidget(widget.TEXT, {
+  if (widgets_lst.length > 1){
+    // button.setProperty(prop.VISIBLE, false)
+    widgets_lst[0].setProperty(prop.MORE, {
+      text : TEXT1,
+      color: event_color,
+      text_size: Math.floor(size1*.8),
+    });
+    widgets_lst[1].setProperty(prop.MORE, {
+      text : TEXT2,
+      color: event_color,
+      text_size: size1,
+    });
+    widgets_lst[2].setProperty(prop.MORE, {
+      text : TEXT3,
+      // color: event_color,
+      text_size: Math.floor(size1*.6),
+    });
+    
+  }
+  else{
+    month_top_info = createWidget(widget.TEXT, {
     x: px(screen_center_h),
     y: px(screen_center_v - line_spacing/2),
     w: text_width,
@@ -206,5 +238,11 @@ function draw_widgets(TEXT1,TEXT2,TEXT3){
     text_style: text_style.WRAP
     // Font: font_path,
   })
-  return day_events_info,month_top_info,month_top_info2
+  widgets_lst.push(month_top_info); // 0
+  widgets_lst.push(month_top_info2); // 1 
+  widgets_lst.push(day_events_info); // 2
+  // widgets_lst.push(day_geo_info); // 3
+  // widgets_lst.push(day_events_info); // 4
+  }
+  // return [day_events_info,month_top_info,month_top_info2]
 }

@@ -1,5 +1,5 @@
 // Shortcut Cards
-import { createWidget, widget, align, text_style, getAppWidgetSize} from '@zos/ui'
+import { createWidget, widget, align, text_style, getAppWidgetSize,deleteWidget, prop} from '@zos/ui'
 import {get_hijri_from_persian,jalaaliDayEvents,get_hijri_cal_in_persian_day} from '../page/date_events_handlers'
 import {hijri_offset,font_path} from '../page/calendar_plotter'
 import { ARABIC_MONTH_NAMES} from '../page/hijri-util-date.js';
@@ -17,13 +17,17 @@ const line_spacing = text_hight * 1.5;
 const screen_center_v = Math.floor(line_spacing/2);//Math.floor(466/2);//-text_hight*2-20;
 const screen_center_h = Math.floor((466-text_width)/2);//Math.floor((466-getAppWidgetSize().w)/2);//Math.floor(466/2);//Math.floor((466 - text_width)/2);
 // var group = createWidget(widget.GROUP, Param);
-var day_events_info = null;
-var day_geo_info = null;
-var day_hij_info  = null;
-var day_per_info = null;
+var widgets_lst2 = [];
+// var day_events_info = null;
+// var day_geo_info = null;
+// var day_hij_info  = null;
+// var day_per_info = null;
 // setAppWidgetSize({ h: 100 })
 // setAppWidgetSize({ h: 20});
 AppWidget({ // Shortcut Cards
+//   state: {
+//   widgets_lst : []
+// },
   build() {
       let today = new Date(); // .toLocaleDateString('fa-IR');
       today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);
@@ -83,8 +87,14 @@ AppWidget({ // Shortcut Cards
     //   height_2_set = line_spacing* (2+ Math.floor(TEXT4.length/ TEXT1.length));
 
     setAppWidgetSize({ h: height_2_set});
-    this.day_per_info0,this.day_events_info, this.day_geo_info, this.day_hij_info, this.day_per_info = 
-      draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color);
+    // day_per_info0,day_events_info, day_geo_info, day_hij_info, day_per_info = 
+    //   draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color);
+      draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color,widgets_lst2);
+    //   widgets_lst.push(day_per_info0);
+    // widgets_lst.push(day_events_info);
+    // widgets_lst.push(day_geo_info);
+    // widgets_lst.push(day_hij_info);
+    // widgets_lst.push(day_per_info);
     // date_info_sel = createWidget(widget.TEXT, {
     //   x: px(screen_center_h),
     //   y: px(screen_center_v + line_spacing),
@@ -119,80 +129,122 @@ AppWidget({ // Shortcut Cards
     // deleteWidget(day_hij_info);
     // deleteWidget(day_per_info);
     // group = createWidget(widget.GROUP, Param);
+  //   try {
+  //   deleteWidget(widgets_lst[4]);
+  //   deleteWidget(widgets_lst[3]);
+  //   deleteWidget(widgets_lst[2]);
+  //   deleteWidget(widgets_lst[1]);
+  //   deleteWidget(widgets_lst[0]);
+  // } catch (error) {
+    
+  // }
     this.build();
+  // }
+  
   }
 })
 
-function draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color){
+function draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color,widgets_lst){
   size1 = Math.floor(text_width/TEXT1.length*2.1);
-  day_per_info0 = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v - line_spacing/2),
-    w: text_width,
-    h: text_hight,
-    color: event_color,
-    text_size: Math.floor(size1*.9),
-    align_h: align.CENTER_H,
-    align_v: align.TOP,
-    text: TEXT0, //''.concat(day_of_week_persian_txt,
-    // ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
-    // ' ',conv_year2per(date_in_p[0])),
-    // Font: font_path,
-  })
-  day_per_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v),
-    w: text_width,
-    h: text_hight,
-    color: event_color,
-    text_size: size1,
-    align_h: align.CENTER_H,
-    align_v: align.TOP,
-    text: TEXT1, //''.concat(day_of_week_persian_txt,
-    // ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
-    // ' ',conv_year2per(date_in_p[0])),
-    // Font: font_path,
-  })
-  day_hij_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v + line_spacing/2),
-    w: text_width,
-    h: text_hight,
-    color: event_color,
-    text_size: Math.floor(size1*.9),
-    align_h: align.CENTER_H,
-    align_v: align.TOP,
-    text: TEXT2, //''.concat(persian_conv[`${hijri_day_in_per_month}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month],
-    // ' ',conv_year2per(hijri_year_in_per_month)), //today.toString(), //
-    // Font: font_path,
-  })
+  if (widgets_lst.length > 1){
+    // button.setProperty(prop.VISIBLE, false)
+    widgets_lst[0].setProperty(prop.MORE, {
+      text : TEXT0,
+      color: event_color,
+      text_size: Math.floor(size1*.9),
+    });
+    widgets_lst[1].setProperty(prop.MORE, {
+      text : TEXT1,
+      color: event_color,
+      text_size: size1,
+    });
+    widgets_lst[2].setProperty(prop.MORE, {
+      text : TEXT2,
+      color: event_color,
+      text_size: Math.floor(size1*.9),
+    });
+    widgets_lst[3].setProperty(prop.MORE, {
+      text : TEXT3,
+      color: event_color,
+      text_size: Math.floor(size1*.8),
+    });
+  }
+  else{
+    day_per_info0 = createWidget(widget.TEXT, {
+      x: px(screen_center_h),
+      y: px(screen_center_v - line_spacing/2),
+      w: text_width,
+      h: text_hight,
+      color: event_color,
+      text_size: Math.floor(size1*.9),
+      align_h: align.CENTER_H,
+      align_v: align.TOP,
+      text: TEXT0, //''.concat(day_of_week_persian_txt,
+      // ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
+      // ' ',conv_year2per(date_in_p[0])),
+      // Font: font_path,
+    })
+    day_per_info = createWidget(widget.TEXT, {
+      x: px(screen_center_h),
+      y: px(screen_center_v),
+      w: text_width,
+      h: text_hight,
+      color: event_color,
+      text_size: size1,
+      align_h: align.CENTER_H,
+      align_v: align.TOP,
+      text: TEXT1, //''.concat(day_of_week_persian_txt,
+      // ' ', persian_conv[`${date_in_p[2]}`],' ',month_txt,
+      // ' ',conv_year2per(date_in_p[0])),
+      // Font: font_path,
+    })
+    day_hij_info = createWidget(widget.TEXT, {
+      x: px(screen_center_h),
+      y: px(screen_center_v + line_spacing/2),
+      w: text_width,
+      h: text_hight,
+      color: event_color,
+      text_size: Math.floor(size1*.9),
+      align_h: align.CENTER_H,
+      align_v: align.TOP,
+      text: TEXT2, //''.concat(persian_conv[`${hijri_day_in_per_month}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month],
+      // ' ',conv_year2per(hijri_year_in_per_month)), //today.toString(), //
+      // Font: font_path,
+    })
+    
+    day_geo_info = createWidget(widget.TEXT, {
+      x: px(screen_center_h),
+      y: px(screen_center_v + line_spacing),
+      w: text_width,
+      h: text_hight,
+      color: event_color,
+      text_size: Math.floor(size1*.8),
+      align_h: align.CENTER_H,
+      align_v: align.TOP,
+      text: TEXT3, //''.concat(persian_conv[`${date_in_g[2]}`],' ',month_txt_g,
+      // ' ',conv_year2per(date_in_g[0])),
+      // Font: font_path,
+    })
   
-  day_geo_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v + line_spacing),
-    w: text_width,
-    h: text_hight,
-    color: event_color,
-    text_size: Math.floor(size1*.8),
-    align_h: align.CENTER_H,
-    align_v: align.TOP,
-    text: TEXT3, //''.concat(persian_conv[`${date_in_g[2]}`],' ',month_txt_g,
-    // ' ',conv_year2per(date_in_g[0])),
-    // Font: font_path,
-  })
-
-  day_events_info = createWidget(widget.TEXT, {
-    x: px(screen_center_h),
-    y: px(screen_center_v + 3*line_spacing/2),
-    w: text_width-40,
-    h: text_hight*2,
-    color: 0xffffff,
-    text_size: Math.floor(size1*.7),
-    align_h: align.CENTER_H,
-    align_v: align.TOP,
-    text: TEXT4, //Events_of_day,
-    text_style: text_style.WRAP
-    // Font: font_path,
-  })
-  return day_per_info0,day_events_info, day_geo_info, day_hij_info, day_per_info
+    day_events_info = createWidget(widget.TEXT, {
+      x: px(screen_center_h),
+      y: px(screen_center_v + 3*line_spacing/2),
+      w: text_width-40,
+      h: text_hight*2,
+      color: 0xffffff,
+      text_size: Math.floor(size1*.7),
+      align_h: align.CENTER_H,
+      align_v: align.TOP,
+      text: TEXT4, //Events_of_day,
+      text_style: text_style.WRAP
+      // Font: font_path,
+    })
+    widgets_lst.push(day_per_info0); // 0
+    widgets_lst.push(day_per_info); // 1 
+    widgets_lst.push(day_hij_info); // 2
+    widgets_lst.push(day_geo_info); // 3
+    // widgets_lst.push(day_events_info); // 4
+  }
+  
+  // return [day_per_info0,day_events_info, day_geo_info, day_hij_info, day_per_info]
 }
