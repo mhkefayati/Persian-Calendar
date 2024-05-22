@@ -1,6 +1,6 @@
 // Shortcut Cards
 import { createWidget, widget, align, text_style, getAppWidgetSize,deleteWidget, prop} from '@zos/ui'
-import {get_hijri_from_persian,jalaaliDayEvents,get_hijri_cal_in_persian_day} from '../page/date_events_handlers'
+import {get_hijri_cal_in_persian_day,jalaaliDayEvents} from '../page/date_events_handlers'
 import {hijri_offset,font_path} from '../page/calendar_plotter'
 import { ARABIC_MONTH_NAMES} from '../page/hijri-util-date.js';
 import {persian_conv,gregorian_to_jalali,
@@ -145,7 +145,7 @@ AppWidget({ // Shortcut Cards
 })
 
 function draw_widgets(TEXT0,TEXT1,TEXT2,TEXT3,TEXT4,event_color,widgets_lst){
-  size1 = Math.floor(text_width/TEXT1.length*2.1);
+  size1 = Math.min(Math.floor(text_width/TEXT1.length*2.1), 50); //Math.floor(text_width/TEXT1.length*2.1);//
   if (widgets_lst.length > 1){
     // button.setProperty(prop.VISIBLE, false)
     widgets_lst[0].setProperty(prop.MORE, {

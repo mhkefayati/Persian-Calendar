@@ -7,14 +7,14 @@ import { getDeviceInfo } from '@zos/device'
 import { align, text_style } from '@zos/ui'
 import {persian_conv,gregorian_to_jalali,
   conv_year2per,get_persian_day,get_persian_month,
-  num_days_in_month,positive_mod} from './date_conversion_functions.js'
+  num_days_in_month,positive_mod,jalaliToGregorian} from './date_conversion_functions.js'
 // import { openAssetsSync, O_RDONLY , readSync} from '@zos/fs'
 import { ARABIC_MONTH_NAMES} from './hijri-util-date.js';
 import { jalaaliMonthLength,toGregorian } from './jalali-util-date.js';
-import { jalaaliMonthEvents } from './date_events_handlers.js';
+import { jalaaliMonthEvents,load_current_month_data} from './date_events_handlers.js';
 import { setPageBrightTime, resetPageBrightTime, pauseDropWristScreenOff} from '@zos/display'
-import {jalaliToGregorian} from './date_conversion_functions.js'
-// import {set_group_cal} from './index.js'
+// import {} from './date_conversion_functions.js'
+// import {set_group_cal} from './index.js' 
 import { push } from '@zos/router'
 
 export const font_path = `/fonts/Vazir.ttf`; //`/fonts/custom.ttf` 'Vazir';
@@ -140,7 +140,7 @@ export function create_month_buttons(group, date_in_g,day_of_week){
 
 
 // export function getMovedDates(date_in_g,day_of_week){
-export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
+export function view_new_cal(date_in_g,day_of_week){//,month_jump,ThisMonthHolidays, ThisMonthEvents, 
  
   let date_in_p = gregorian_to_jalali(date_in_g[0], date_in_g[1], date_in_g[2]); 
     
@@ -171,7 +171,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
 
 // // date_in_g = [2024,4,6];
 //     // day_of_week = 6;
-// export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_month, Events_of_month, 
+// export function view_new_cal(date_in_g,day_of_week){//,month_jump,ThisMonthHolidays, ThisMonthEvents, 
   // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month){
     if (day_of_week < 6)// 6 is sat
       day_of_week_persian = day_of_week+2;
@@ -191,11 +191,20 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
 
     day_of_week_in_month_start = positive_mod((day_of_week_persian - (today_date_pr % 7)),7) ;
     
-    holidays_of_month, Events_of_month, 
-    hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month
-     = jalaaliMonthEvents(today_year_pr, today_month_pr,hijri_offset);
-    // holidays_of_month = state.data.holidays_of_month;
-    // Events_of_month = state.data.Events_of_month;
+    // [ThisMonthHolidays, ThisMonthEvents, 
+    // hijri_year_in_per_month, hijri_month_in_per_month, hijri_day_in_per_month]
+    //  = jalaaliMonthEvents(today_year_pr, today_month_pr,hijri_offset);
+
+    //  console.log(hijri_day_in_per_month.length)
+    //  console.log(hijri_month_in_per_month.length)
+    //  console.log(hijri_year_in_per_month.length)
+
+     [ThisMonthHolidays, ThisMonthEvents, ThisMonthHijri] = load_current_month_data(today_year_pr, today_month_pr,hijri_offset);
+     hijri_year_in_per_month = ThisMonthHijri[0];
+     hijri_month_in_per_month = ThisMonthHijri[1];
+     hijri_day_in_per_month = ThisMonthHijri[2];
+     // ThisMonthHolidays = state.data.ThisMonthHolidays;
+    // ThisMonthEvents = state.data.ThisMonthEvents;
     // hijri_year_in_per_month = state.data.hijri_year_in_per_month;
     // hijri_month_in_per_month = state.data.hijri_month_in_per_month;
     // hijri_day_in_per_month = state.data.hijri_day_in_per_month;
@@ -213,7 +222,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
       text_size: 22,
       align_h: align.CENTER_H,
       align_v: align.CENTER_V,
-      text:  Events_of_month[today_date_pr-1],//Events_of_month[0],//today.toString(), //
+      text: ThisMonthEvents[today_date_pr-1],//ThisMonthEvents[0],//today.toString(), //
       Font: font_path,
     })
     date_info_sel = group.createWidget(widget.TEXT, {
@@ -271,7 +280,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
       
       if (i==today_date_pr && month_jump == 0)
         date_color = 0x00ffff; // current day color
-      else if (holidays_of_month[i-1] )//|| (col_idx%7 == 0))
+      else if (ThisMonthHolidays[i-1] )//|| (col_idx%7 == 0))
         date_color = 0xff0000; // holiday color
       else if (col_idx%7 == 0)
         date_color = 0xff0000; // jome color
@@ -293,7 +302,7 @@ export function view_new_cal(date_in_g,day_of_week){//,month_jump,holidays_of_mo
           // text: 'Hello',
           click_func: () => { // button_widget
             date_info.setProperty(prop.MORE, {
-              text : Events_of_month[i-1],
+              text : ThisMonthEvents[i-1],
             }),
             date_info_sel.setProperty(prop.MORE, {
               text : ''.concat(persian_conv[`${hijri_day_in_per_month[i-1]}`],' ',ARABIC_MONTH_NAMES[hijri_month_in_per_month[i-1]],
