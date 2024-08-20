@@ -11,6 +11,8 @@
 ![zepp_screenshot_1724186404963](https://github.com/user-attachments/assets/c69289f8-2a2f-4e7e-b1d4-7ec3dfd463d7)
 ![zepp_screenshot_1724186417721](https://github.com/user-attachments/assets/6f62165f-b837-479e-afd8-5180dee5f3d0)
 ![zepp_screenshot_1724186445507](https://github.com/user-attachments/assets/0158f651-9abf-4e10-9c72-cdb6770bb8bc)
+![1724159792631](https://github.com/user-attachments/assets/ace7d3ca-0ade-40d2-92b2-5f4dd16aa7ea)
+![820 TUE](https://github.com/user-attachments/assets/24c4848d-203f-460a-9b5e-16bf00d44fcc)
 
 حداقل نسخه سیستم عامل قابل پشتیبانی: zepp os 3
 دستگاه های قابل پشتیبانی: Amazfit GTR4
