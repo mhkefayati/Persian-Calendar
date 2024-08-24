@@ -28,7 +28,8 @@ Amazfit Balance
 ۶ـ گزینه open را در سمت راست بالا لمس کرده و تصویر qr کد را انتخاب کنید.
 نرم افزار به صورت خود کار نصب می شود.
 
-<img width="280" alt="Screen Shot 2024-08-21 at 12 36 20 AM" src="https://github.com/user-attachments/assets/0ef2a85b-1865-4638-9dde-d1c2b77a5554">
+<img width="282" alt="Screen Shot 2024-08-24 at 11 37 59 PM" src="https://github.com/user-attachments/assets/e5370ced-14b8-4a3e-9d69-5a4b14ec87f7">
+
 
 ### روش دوم:
 دانلود برنامه از اپ استور برنامه zepp.
