@@ -1,5 +1,5 @@
-import { getText } from '@zos/i18n'
-import { readFileSync , writeFileSync,mkdirSync} from '@zos/fs'
+// import { getText } from '@zos/i18n'
+// import { readFileSync , writeFileSync,mkdirSync} from '@zos/fs'
 import * as Styles from 'zosLoader:./index.[pf].layout.js'
 import { getTextLayout, createWidget, widget, deleteWidget, event, prop} from '@zos/ui'
 import { log as Logger, px } from "@zos/utils";
@@ -11,7 +11,7 @@ import { align, text_style } from '@zos/ui'
 // import { openAssetsSync, O_RDONLY , readSync} from '@zos/fs'
 import { ARABIC_MONTH_NAMES, julianToGregorian} from './hijri-util-date.js';
 import { jalaaliMonthLength, toGregorian } from './jalali-util-date.js';
-import { view_new_cal, getMovedDates, create_month_buttons, draw_month} from './calendar_plotter.js';
+import { view_new_cal, create_month_buttons, draw_month} from './calendar_plotter.js';
 import { LocalStorage } from '@zos/storage'
 import { jalaaliMonthEvents } from './date_events_handlers.js';
 import {persian_conv,gregorian_to_jalali,
@@ -31,7 +31,7 @@ const logger = Logger.getLogger("my_app");
 Page({
   build() {
     // this.onInit11();
-    console.log(getText('example'))
+    // console.log(getText('example'))
     
     let today = new Date(); // .toLocaleDateString('fa-IR');
     today.setUTCHours(today.getUTCHours() - 4, today.getUTCMinutes() -30);

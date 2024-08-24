@@ -145,7 +145,7 @@ export function load_current_month_data(year_persian, month_persian,hijri_offset
         // else parse and write current month, remove last month
         // : fix parameters to comply with other json loading format and outputing
         const contentString = readFileSync({
-            path: 'assets://events.json',
+            path: 'assets://events-trimed.json', // 'assets://events.json',
             options: {
               encoding: 'utf8',
             },
@@ -215,7 +215,7 @@ export function load_current_month_data(year_persian, month_persian,hijri_offset
 
 export function jalaaliMonthEvents(year_persian, month_persian,hijri_offset){
     const contentString = readFileSync({
-        path: 'assets://events.json',
+        path: 'assets://events-trimed.json', // 'assets://events.json',
         options: {
           encoding: 'utf8',
         },
@@ -272,7 +272,7 @@ export function jalaaliMonthEvents(year_persian, month_persian,hijri_offset){
 
 export function jalaaliDayEvents(year_persian, month_persian,day_persian,hijri_offset){
     const contentString = readFileSync({
-        path: 'assets://events.json',
+        path: 'assets://events-trimed.json', // 'assets://events.json',
         options: {
           encoding: 'utf8',
         },

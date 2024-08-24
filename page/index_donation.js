@@ -12,7 +12,7 @@ import { align, text_style } from '@zos/ui'
 // import { openAssetsSync, O_RDONLY , readSync} from '@zos/fs'
 import { ARABIC_MONTH_NAMES, julianToGregorian} from './hijri-util-date.js';
 import { jalaaliMonthLength, toGregorian } from './jalali-util-date.js';
-import { view_new_cal, getMovedDates, create_month_buttons, draw_month} from './calendar_plotter.js';
+import { view_new_cal, create_month_buttons, draw_month} from './calendar_plotter.js';
 import { LocalStorage } from '@zos/storage'
 import { jalaaliMonthEvents } from './date_events_handlers.js';
 import {persian_conv,gregorian_to_jalali,

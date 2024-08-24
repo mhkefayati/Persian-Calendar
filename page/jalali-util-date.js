@@ -307,17 +307,17 @@ function jalaaliWeek(jy, jm, jd) {
   }
 }
 
-/**
- * Convert Jalaali calendar dates to javascript Date object
- * @param {number} jy jalaali year
- * @param {number} jm jalaali month
- * @param {number} jd jalaali day
- * @param {number} [h] hours
- * @param {number} [m] minutes
- * @param {number} [s] seconds
- * @param {number} [ms] milliseconds
- * @returns Date object of the jalaali calendar dates
- */
+// /**
+//  * Convert Jalaali calendar dates to javascript Date object
+//  * @param {number} jy jalaali year
+//  * @param {number} jm jalaali month
+//  * @param {number} jd jalaali day
+//  * @param {number} [h] hours
+//  * @param {number} [m] minutes
+//  * @param {number} [s] seconds
+//  * @param {number} [ms] milliseconds
+//  * @returns Date object of the jalaali calendar dates
+//  */
 function jalaaliToDateObject(
   jy,
   jm,
