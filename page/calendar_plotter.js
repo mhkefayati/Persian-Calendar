@@ -26,7 +26,7 @@ table_offset_v = 30;
 export const gap_v = DATE_BUT_SIZE+8;
 export const gap_h = gap_v;
 var MONTHS_BUT_SIZE = 55;
-export const hijri_offset = -1;
+export const hijri_offset = 0;
 var month_jump = 0; // current month
 
 
